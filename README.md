@@ -106,7 +106,7 @@ npm run dev
 
 Visit [http://localhost:8000](http://localhost:8000) to view the site.
 
-** Project Structure Highlights**
+## **Project Structure Highlights**
 
 **app/Http/Controllers/BlogController.php:** Handles public-facing logic (Index, Show, Category filtering, Recommendations).
 
@@ -114,12 +114,12 @@ Visit [http://localhost:8000](http://localhost:8000) to view the site.
 
 **resources/views/layouts/blog-layout.blade.php:** The master layout containing the sticky nav, footer, and dark mode logic.
 
-**tailwind.config.js: **Custom configuration for fonts (Inter/Merriweather) and dark mode class strategy.
+**tailwind.config.js:** Custom configuration for fonts (Inter/Merriweather) and dark mode class strategy.
 
 ## **Contributing**
 
 Contributions are welcome! Please fork the repository and submit a pull request.
 
-## ** License**
+## **License**
 
 This project is open-sourced software licensed under the MIT license.
