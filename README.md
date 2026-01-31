@@ -1,39 +1,39 @@
-**Vertex Blog CMS**
+# Vertex Blog CMS
 
 Vertex is a modern, high-performance content management system built for developers who value aesthetics and speed. Featuring a minimalist, high-contrast design inspired by top-tier tech blogs, it comes with a fully responsive layout, a powerful admin dashboard, and system-aware dark mode.
 
-**Features**
+## **Features**
 
-**Frontend & UI**
+### **Frontend & UI**
 
-**Dual Typography System:** Inter for UI clarity and Merriweather for comfortable long-form reading.
+- **Dual Typography System:** Inter for UI clarity and Merriweather for comfortable long-form reading.
 
-**Smart Dark Mode:** Automatically syncs with system preferences, with a manual override saved to LocalStorage.
+- **Smart Dark Mode:** Automatically syncs with system preferences, with a manual override saved to LocalStorage.
 
-**Dynamic Hero Section:** Automatically highlights the latest post with a split-layout design.
+- **Dynamic Hero Section:** Automatically highlights the latest post with a split-layout design.
 
-**Smart Fallbacks:** Posts without images generate professional gradient placeholders automatically.
+- **Smart Fallbacks:** Posts without images generate professional gradient placeholders automatically.
 
-**Reading Experience:** - Sticky Reading Progress Bar.
+- **Reading Experience:** - Sticky Reading Progress Bar.
 
-**"Copy Link"** micro-interaction.
+-**"Copy Link"** micro-interaction.
 
-**"Read Next"** recommendation engine based on category context.
+- **"Read Next"** recommendation engine based on category context.
 
-**Backend & Admi**n
+## **Backend & Admin**
 
-**Dashboard Stats:** At-a-glance view of Total Posts, Published Articles, and Drafts.
+- **Dashboard Stats:** At-a-glance view of Total Posts, Published Articles, and Drafts.
 
-**Content Management**: Create, Edit, and Delete posts with rich text integration (TinyMCE).
+- **Content Management**: Create, Edit, and Delete posts with rich text integration (TinyMCE).
 
-**Organization:** Robust Category and Tagging system (Many-to-Many relationships).
+- **Organization:** Robust Category and Tagging system (Many-to-Many relationships).
 
-**Image Optimization:** Handles uploads and symbolic linking via Laravel Storage.
+- **Image Optimization:** Handles uploads and symbolic linking via Laravel Storage.
 
-**Search**: Real-time filtered search for posts and mobile-optimized search bar.
+- **Search**: Real-time filtered search for posts and mobile-optimized search bar.
 
 
-**Installation Guide**
+## **Installation Guide**
 
 Follow these steps to set up Vertex locally.
 
@@ -90,7 +90,7 @@ Compile Tailwind CSS and JS.
 npm run build
 ```
 
-**Running the App**
+## **Running the App**
 
 To run the application locally, you need to keep two terminal windows open:
 
@@ -116,10 +116,10 @@ Visit [http://localhost:8000](http://localhost:8000) to view the site.
 
 **tailwind.config.js: **Custom configuration for fonts (Inter/Merriweather) and dark mode class strategy.
 
- **Contributing**
+## **Contributing**
 
 Contributions are welcome! Please fork the repository and submit a pull request.
 
-** License**
+## ** License**
 
 This project is open-sourced software licensed under the MIT license.
