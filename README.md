@@ -2,9 +2,9 @@
 
 Vertex is a modern, high-performance content management system built for developers who value aesthetics and speed. Featuring a minimalist, high-contrast design inspired by top-tier tech blogs, it comes with a fully responsive layout, a powerful admin dashboard, and system-aware dark mode.
 
-** Features**
+**Features**
 
-** Frontend & UI**
+**Frontend & UI**
 
 **Dual Typography System:** Inter for UI clarity and Merriweather for comfortable long-form reading.
 
@@ -38,10 +38,10 @@ Vertex is a modern, high-performance content management system built for develop
 Follow these steps to set up Vertex locally.
 
 **1. Clone the Repository**
-
+```bash
 git clone [https://github.com/devluka/blog-cms.git](https://github.com/devluka/blog-cms.git)
 cd vertex-cms
-
+```
 
 **2. Install Dependencies**
 
