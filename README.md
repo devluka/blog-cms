@@ -39,7 +39,7 @@ Follow these steps to set up Vertex locally.
 
 **1. Clone the Repository**
 ```bash
-git clone [https://github.com/devluka/blog-cms.git](https://github.com/devluka/blog-cms.git)
+git clone https://github.com/devluka/blog-cms.git
 cd vertex-cms
 ```
 
