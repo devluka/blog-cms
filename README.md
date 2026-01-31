@@ -40,7 +40,7 @@ Follow these steps to set up Vertex locally.
 **1. Clone the Repository**
 ```bash
 git clone https://github.com/devluka/blog-cms.git
-cd vertex-cms
+cd blog-cms
 ```
 
 **2. Install Dependencies**
