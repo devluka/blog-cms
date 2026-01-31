@@ -16,7 +16,7 @@ Vertex is a modern, high-performance content management system built for develop
 
 - **Reading Experience:** - Sticky Reading Progress Bar.
 
--**"Copy Link"** micro-interaction.
+- **"Copy Link"** micro-interaction.
 
 - **"Read Next"** recommendation engine based on category context.
 
