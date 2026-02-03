@@ -42,7 +42,7 @@ Vertex is a modern, high-performance content management system built for develop
 | /register | Register page |
 | /dashboard | Dashboard page |
 
-**Discalimer:** On production the /register url can be ommitted from **/routes/auth.php** if not needed
+**Disclaimer:** On production the /register url can be ommitted from **/routes/auth.php** if not needed
 to prevent unwanted authorized access to the system.
 
 ## **Installation Guide**
