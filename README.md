@@ -124,7 +124,7 @@ Visit [http://localhost:8000](http://localhost:8000) to view the site.
 
 + **app/Http/Controllers/PostController.php:** Admin logic for creating/editing posts and handling image uploads.
 
-+ **resources/views/layouts/blog-layout.blade.php:** The master layout containing the sticky nav, footer, and dark mode logic.
++ **resources/views/layouts/blog-layout.blade.php:** The master layout containing the sticky nav, footer etc.
 
 + **resources/views/blogs/index.blade.php:** Displays all latest posts.
 
