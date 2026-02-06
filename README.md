@@ -1,14 +1,12 @@
 # Vertex Blog CMS
 
-Vertex is a modern, high-performance content management system built for developers who value aesthetics and speed. Featuring a minimalist, high-contrast design inspired by top-tier tech blogs, it comes with a fully responsive layout, a powerful admin dashboard, and system-aware dark mode.
+Vertex is a modern, high-performance content management system built for developers who value aesthetics and speed. Featuring a minimalist, high-contrast design inspired by top-tier tech blogs, it comes with a fully responsive layout, a powerful admin dashboard, and minimalistic layout.
 
 ## **Features**
 
 ### **Frontend & UI**
 
-- **Dual Typography System:** Inter for UI clarity and Merriweather for comfortable long-form reading.
-
-- **Smart Dark Mode:** Automatically syncs with system preferences, with a manual override saved to LocalStorage.
+- **Tailwind CSS:** Utilizes latest tailwind css v4.0 which is framework optimized.
 
 - **Dynamic Hero Section:** Automatically highlights the latest post with a split-layout design.
 
@@ -16,9 +14,11 @@ Vertex is a modern, high-performance content management system built for develop
 
 - **Reading Experience:** - Sticky Reading Progress Bar.
 
-- **"Copy Link"** micro-interaction.
+- **"Copy Link"** Enables users to share blog post links.
 
 - **"Read Next"** recommendation engine based on category context.
+
+- **Search**: Real-time filtered search for posts and mobile-optimized search bar.
 
 ## **Backend & Admin**
 
@@ -29,9 +29,21 @@ Vertex is a modern, high-performance content management system built for develop
 - **Organization:** Robust Category and Tagging system (Many-to-Many relationships).
 
 - **Image Optimization:** Handles uploads and symbolic linking via Laravel Storage.
+                          Smartly changes images to webp for better web perfomance.
 
-- **Search**: Real-time filtered search for posts and mobile-optimized search bar.
+- **SEO Features:** Displays SEO scores when creating and editing posts to reduce hassle on
+                    publish
 
+### **Admin navigation urls**
+
+| URL | Page |
+|---|---|
+| /login | Login page |
+| /register | Register page |
+| /dashboard | Dashboard page |
+
+**Disclaimer:** On production the /register url can be ommitted from **/routes/auth.php** if not needed
+to prevent unwanted authorized access to the system.
 
 ## **Installation Guide**
 
@@ -57,7 +69,7 @@ Copy the example environment file and configure your database.
 ```bash
 cp .env.example .env
 ```
-
+Have a MySQL server running (XAMPP recommended)
 Open .env and configure your database credentials:
 ```bash
 DB_CONNECTION=mysql
@@ -108,13 +120,21 @@ Visit [http://localhost:8000](http://localhost:8000) to view the site.
 
 ## **Project Structure Highlights**
 
-**app/Http/Controllers/BlogController.php:** Handles public-facing logic (Index, Show, Category filtering, Recommendations).
++ **app/Http/Controllers/BlogController.php:** Handles public-facing logic (Index, Show, Category filtering, Recommendations).
 
-**app/Http/Controllers/PostController.php:** Admin logic for creating/editing posts and handling image uploads.
++ **app/Http/Controllers/PostController.php:** Admin logic for creating/editing posts and handling image uploads.
 
-**resources/views/layouts/blog-layout.blade.php:** The master layout containing the sticky nav, footer, and dark mode logic.
++ **resources/views/layouts/blog-layout.blade.php:** The master layout containing the sticky nav, footer etc.
 
-**tailwind.config.js:** Custom configuration for fonts (Inter/Merriweather) and dark mode class strategy.
++ **resources/views/blogs/index.blade.php:** Displays all latest posts.
+
++ **resources/views/blogs/show.blade.php:** Displays individuals posts. 
+
++ **resources/views/posts/create.blade.php:** Create new posts.
+
++ **resources/views/posts/edit.blade.php:** Edit existing posts. 
+
++ **tailwind.config.js:** Slight adjustments for styling one.
 
 ## **Contributing**
 
