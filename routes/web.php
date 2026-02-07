@@ -45,6 +45,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+
+    Route::get('/categories/{category}/delete', [CategoryController::class, 'delete']) ->name('categories.delete-confirm');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    Route::resource('categories', CategoryController::class);
     
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');

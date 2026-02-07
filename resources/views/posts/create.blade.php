@@ -6,22 +6,28 @@
     </x-slot>
 
     {{-- SEO Logic using Alpine.js --}}
-    <div class="py-12" x-data="seoAnalyzer()">
+    {{-- CRITICAL: id="seo-component" and @seo-update are required for TinyMCE communication --}}
+    <div class="py-12" 
+         id="seo-component" 
+         x-data="seoAnalyzer()" 
+         @seo-update="content = $event.detail; checkSeo()">
+         
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {{-- MAIN FORM --}}
             <div class="lg:col-span-2 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if ($errors->any())
-    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-        <p class="font-bold">Please fix the following errors:</p>
-        <ul class="list-disc list-inside">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+                        <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                            <p class="font-bold">Please fix the following errors:</p>
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" id="postForm">
                         @csrf
 
@@ -51,29 +57,29 @@
                         </div>
 
                         <div class="mb-4">
-    <label class="block text-sm font-medium text-gray-700">Tags</label>
-    <input type="text" name="tags" placeholder="Technology, Laravel, Tutorial (Comma separated)"
-           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-    <p class="text-xs text-gray-500 mt-1">Separate tags with commas.</p>
-</div>
+                            <label class="block text-sm font-medium text-gray-700">Tags</label>
+                            <input type="text" name="tags" placeholder="Technology, Laravel, Tutorial (Comma separated)"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <p class="text-xs text-gray-500 mt-1">Separate tags with commas.</p>
+                        </div>
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Featured Image</label>
                             <input type="file" name="featured_image" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                         </div>
 
-                        {{-- SEO META FIELDS (New) --}}
+                        {{-- SEO META FIELDS --}}
                         <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                             <h3 class="font-bold text-gray-700 mb-2">SEO Meta Data</h3>
                             
                             <div class="mb-3">
                                 <label class="block text-sm font-medium text-gray-700">Focus Keyword</label>
-<input type="text" 
-       name="meta_keyword" 
-       x-model="keyword" 
-       @input="checkSeo" 
-       placeholder="e.g. Laravel Tutorial"
-       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <input type="text" 
+                                       name="meta_keyword" 
+                                       x-model="keyword" 
+                                       @input="checkSeo" 
+                                       placeholder="e.g. Laravel Tutorial"
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 <p class="text-xs text-gray-500 mt-1">The main phrase you want this post to rank for.</p>
                             </div>
 
@@ -89,7 +95,6 @@
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Content</label>
-                            {{-- We add an ID to trigger checks when TinyMCE changes --}}
                             <textarea id="myeditor" name="body"></textarea>
                         </div>
 
@@ -107,41 +112,79 @@
 
             {{-- SIDEBAR: REAL-TIME SEO SCORE --}}
             <div class="lg:col-span-1">
-                <div class="bg-white p-6 shadow-sm sm:rounded-lg sticky top-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">SEO Score</h3>
+                <div class="bg-white p-6 shadow-sm sm:rounded-xl border border-gray-100 sticky top-6">
+                    
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            SEO Score
+                        </h3>
+                    </div>
                     
                     {{-- Overall Score Indicator --}}
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="text-3xl font-bold" :class="scoreColor" x-text="score + '%'"></div>
-                        <div class="text-sm text-gray-500">Optimization Level</div>
+                        <div class="relative flex items-center justify-center w-16 h-16 rounded-full border-4"
+                             :class="score >= 80 ? 'border-green-500 text-green-600 bg-green-50' : (score >= 50 ? 'border-yellow-500 text-yellow-600 bg-yellow-50' : 'border-red-500 text-red-600 bg-red-50')">
+                            <span class="text-xl font-extrabold" x-text="score + '%'"></span>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-500">Optimization</div>
+                            <div class="text-xs text-gray-400" x-text="score >= 80 ? 'Great job!' : (score >= 50 ? 'Needs work' : 'Poor')"></div>
+                        </div>
                     </div>
 
                     {{-- Checklist --}}
-                    <ul class="space-y-3 text-sm">
-                        <li class="flex items-start gap-2">
-                            <span x-text="checks.titleLength ? '✅' : '❌'"></span>
-                            <span :class="checks.titleLength ? 'text-green-700' : 'text-red-600'">Title length (40-60 chars)</span>
+                    <ul class="space-y-4 text-sm">
+                        
+                        {{-- 1. Title Length --}}
+                        <li class="flex items-start gap-3">
+                            <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.titleLength" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.titleLength" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.titleLength ? 'text-gray-700 font-medium' : 'text-gray-500'">Title length (40-60 chars)</span>
                         </li>
-                        <li class="flex items-start gap-2">
-                            <span x-text="checks.keywordInTitle ? '✅' : '❌'"></span>
-                            <span :class="checks.keywordInTitle ? 'text-green-700' : 'text-red-600'">Keyword in Title</span>
+
+                        {{-- 2. Keyword in Title --}}
+                        <li class="flex items-start gap-3">
+                            <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.keywordInTitle" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.keywordInTitle" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.keywordInTitle ? 'text-gray-700 font-medium' : 'text-gray-500'">Keyword in Title</span>
                         </li>
-                        <li class="flex items-start gap-2">
-                            <span x-text="checks.descLength ? '✅' : '❌'"></span>
-                            <span :class="checks.descLength ? 'text-green-700' : 'text-red-600'">Meta Desc length (120-160 chars)</span>
+
+                        {{-- 3. Description Length --}}
+                        <li class="flex items-start gap-3">
+                            <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.descLength" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.descLength" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.descLength ? 'text-gray-700 font-medium' : 'text-gray-500'">Meta Desc (120-160 chars)</span>
                         </li>
-                        <li class="flex items-start gap-2">
-                            <span x-text="checks.keywordInDesc ? '✅' : '❌'"></span>
-                            <span :class="checks.keywordInDesc ? 'text-green-700' : 'text-red-600'">Keyword in Meta Desc</span>
+
+                        {{-- 4. Keyword in Description --}}
+                        <li class="flex items-start gap-3">
+                            <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.keywordInDesc" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.keywordInDesc" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.keywordInDesc ? 'text-gray-700 font-medium' : 'text-gray-500'">Keyword in Description</span>
                         </li>
-                         <li class="flex items-start gap-2">
-                            <span x-text="checks.contentLength ? '✅' : '❌'"></span>
-                            <span :class="checks.contentLength ? 'text-green-700' : 'text-red-600'">Content > 300 words</span>
+
+                        {{-- 5. Content Length --}}
+                        <li class="flex items-start gap-3">
+                            <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.contentLength" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.contentLength" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.contentLength ? 'text-gray-700 font-medium' : 'text-gray-500'">Content > 300 words</span>
                         </li>
                     </ul>
                 </div>
             </div>
-
+            
         </div>
     </div>
 
@@ -156,19 +199,17 @@
                 content: '',
                 score: 0,
                 checks: { titleLength: false, keywordInTitle: false, descLength: false, keywordInDesc: false, contentLength: false },
+                
                 slugify(text) {
                     return text.toString().toLowerCase()
                         .replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
                 },
+
                 checkSeo() {
-                    if(tinymce.get('myeditor')) {
-                        this.content = tinymce.get('myeditor').getContent({format: 'text'});
-                    }
-                    // ... (Rest of your SEO check logic) ...
                     let passed = 0;
                     let totalChecks = 5;
                     
-                    // Re-paste your exact checks here
+
                     this.checks.titleLength = this.title.length >= 40 && this.title.length <= 60;
                     if(this.checks.titleLength) passed++;
                     
@@ -177,20 +218,16 @@
 
                     this.checks.descLength = this.description.length >= 120 && this.description.length <= 160;
                     if(this.checks.descLength) passed++;
-
                     this.checks.keywordInDesc = this.keyword.length > 0 && this.description.toLowerCase().includes(this.keyword.toLowerCase());
                     if(this.checks.keywordInDesc) passed++;
-
-                    let wordCount = this.content.trim().split(/\s+/).length;
+                    let text = this.content.trim();
+                    let wordCount = text === '' ? 0 : text.split(/\s+/).length;
+                    
                     this.checks.contentLength = wordCount > 300;
                     if(this.checks.contentLength) passed++;
 
+
                     this.score = Math.round((passed / totalChecks) * 100);
-                },
-                get scoreColor() {
-                    if (this.score < 50) return 'text-red-600';
-                    if (this.score < 80) return 'text-yellow-500';
-                    return 'text-green-600';
                 }
             }
         }
@@ -202,18 +239,14 @@
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | link image',
             skin: 'oxide',
             content_css: 'default',
-            
-            // --- 1. ENABLE IMAGE UPLOADS ---
             image_title: true,
             automatic_uploads: true,
             file_picker_types: 'image',
 
-            // --- 2. THE UPLOAD HANDLER ---
             images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
                 xhr.withCredentials = false;
                 xhr.open('POST', '{{ route('tinymce.upload') }}');
-                
                 xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
                 xhr.upload.onprogress = (e) => {
@@ -249,15 +282,16 @@
                 xhr.send(formData);
             }),
 
-            // --- 3. SEO Integration (Existing) ---
             setup: function(editor) {
                 editor.on('KeyUp Change', function(e) {
-                    // This weird syntax gets the Alpine data scope
-                    let alpineElement = document.querySelector('[x-data]');
-                    if (alpineElement && alpineElement.__x) {
-                        let alpineComponent = alpineElement.__x.$data;
-                        alpineComponent.content = editor.getContent({format: 'text'});
-                        alpineComponent.checkSeo();
+                    var content = editor.getContent({format: 'text'});
+                    var el = document.getElementById('seo-component');
+                    
+                    if (el) {
+                        el.dispatchEvent(new CustomEvent('seo-update', { 
+                            detail: content,
+                            bubbles: true 
+                        }));
                     }
                 });
             }

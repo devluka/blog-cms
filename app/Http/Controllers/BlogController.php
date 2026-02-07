@@ -9,16 +9,12 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
-        // 1. Fetch Categories for the Navbar
+
         $categories = Category::has('posts')->select('id', 'name', 'slug')->get();
 
-        // 2. Start the Post Query
-        // Fixed: Removed duplicate assignment. Added 'tags' to eager loading.
         $query = Post::with(['category', 'user', 'tags']) 
                      ->where('is_published', true);
 

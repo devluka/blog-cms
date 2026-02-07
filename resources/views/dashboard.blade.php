@@ -25,12 +25,18 @@
                 </div>
             @endif
 
-            {{-- 1. DATA PREPARATION (Ideally move this to Controller) --}}
+            {{-- 1. DATA PREPARATION --}}
             @php
-                $posts = Auth::user()->posts()->orderBy('created_at', 'desc')->get();
-                $publishedCount = $posts->where('is_published', true)->count();
-                $draftCount = $posts->where('is_published', false)->count();
-                $totalCount = $posts->count();
+                // We create a base query builder first
+                $query = Auth::user()->posts();
+                
+                // DATA FOR STATS: We calculate these separately so they count the whole DB, not just the current page
+                $totalCount = $query->count();
+                $publishedCount = $query->clone()->where('is_published', true)->count();
+                $draftCount = $query->clone()->where('is_published', false)->count();
+
+                // DATA FOR TABLE: We use paginate() instead of get()
+                $posts = $query->clone()->orderBy('created_at', 'desc')->paginate(10);
             @endphp
 
             {{-- 2. STATS OVERVIEW --}}
@@ -77,7 +83,7 @@
                 <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
                     <h3 class="font-bold text-lg text-gray-900">Recent Articles</h3>
                     
-                    {{-- Search Bar (Visual Only - Requires Controller Logic to Function) --}}
+                    {{-- Search Bar --}}
                     <div class="relative w-full md:w-64">
                         <input type="text" placeholder="Search posts..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
                         <div class="absolute left-3 top-2.5 text-gray-400">
@@ -165,6 +171,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+
+                    {{-- PAGINATION LINKS ADDED HERE --}}
+                    <div class="px-6 py-4 border-t border-gray-100">
+                        {{ $posts->links() }}
                     </div>
                 @else
                     {{-- Empty State --}}

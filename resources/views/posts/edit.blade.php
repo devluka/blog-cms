@@ -6,13 +6,17 @@
     </x-slot>
 
     {{-- Initialize with existing data --}}
-    <div class="py-12" x-data="seoAnalyzer()" x-init="
-        title = '{{ addslashes($post->title) }}';
-        description = '{{ addslashes($post->meta_description ?? '') }}';
-        {{-- You might need to add a meta_keywords column to your DB if you want to save this --}}
-        keyword = '{{ addslashes($post->meta_keyword ?? '') }}'; 
-        checkSeo();
-    ">
+    <div class="py-12" 
+         id="seo-component"
+         x-data="seoAnalyzer()" 
+         x-init="
+            title = '{{ addslashes($post->title) }}';
+            description = '{{ addslashes($post->meta_description ?? '') }}';
+            keyword = '{{ addslashes($post->meta_keyword ?? '') }}'; 
+            checkSeo();
+         "
+         @seo-update="content = $event.detail; checkSeo()"
+    >
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <div class="lg:col-span-2 bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -43,13 +47,13 @@
                         </div>
 
                         <div class="mb-4">
-    <label class="block text-sm font-medium text-gray-700">Tags</label>
-    <input type="text" name="tags" 
-           value="{{ $post->tags->pluck('name')->implode(', ') }}"
-           placeholder="Technology, Laravel, Tutorial"
-           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-    <p class="text-xs text-gray-500 mt-1">Separate tags with commas.</p>
-</div>
+                            <label class="block text-sm font-medium text-gray-700">Tags</label>
+                            <input type="text" name="tags" 
+                                   value="{{ $post->tags->pluck('name')->implode(', ') }}"
+                                   placeholder="Technology, Laravel, Tutorial"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <p class="text-xs text-gray-500 mt-1">Separate tags with commas.</p>
+                        </div>
 
                          {{-- IMAGE SECTION --}}
                         @if($post->featured_image)
@@ -78,7 +82,6 @@
                             
                             <div class="mb-3">
                                 <label class="block text-sm font-medium text-gray-700">Focus Keyword</label>
-                                {{-- Note: Ensure you add 'meta_keyword' to your posts table --}}
                                 <input type="text" name="meta_keyword" x-model="keyword" @input="checkSeo" 
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
@@ -116,36 +119,59 @@
                 </div>
             </div>
 
-            {{-- SIDEBAR: SEO SCORE (Identical to Create) --}}
+            {{-- SIDEBAR: SEO SCORE --}}
             <div class="lg:col-span-1">
                 <div class="bg-white p-6 shadow-sm sm:rounded-lg sticky top-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">SEO Score</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2 flex items-center gap-2">
+                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        SEO Score
+                    </h3>
                     
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="text-3xl font-bold" :class="scoreColor" x-text="score + '%'"></div>
-                        <div class="text-sm text-gray-500">Optimization Level</div>
+                        <div class="relative flex items-center justify-center w-16 h-16 rounded-full border-4" :class="scoreColor">
+                            <span class="text-xl font-extrabold" x-text="score + '%'"></span>
+                        </div>
+                        <div>
+                            <div class="text-sm font-medium text-gray-500">Optimization</div>
+                            <div class="text-xs text-gray-400" x-text="score >= 80 ? 'Great job!' : (score >= 50 ? 'Needs work' : 'Poor')"></div>
+                        </div>
                     </div>
 
                     <ul class="space-y-3 text-sm">
                         <li class="flex items-start gap-2">
-                            <span x-text="checks.titleLength ? '✅' : '❌'"></span>
-                            <span :class="checks.titleLength ? 'text-green-700' : 'text-red-600'">Title length (40-60 chars)</span>
+                            <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.titleLength" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.titleLength" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.titleLength ? 'text-gray-700 font-medium' : 'text-gray-500'">Title length (40-60 chars)</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <span x-text="checks.keywordInTitle ? '✅' : '❌'"></span>
-                            <span :class="checks.keywordInTitle ? 'text-green-700' : 'text-red-600'">Keyword in Title</span>
+                             <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.keywordInTitle" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.keywordInTitle" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.keywordInTitle ? 'text-gray-700 font-medium' : 'text-gray-500'">Keyword in Title</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <span x-text="checks.descLength ? '✅' : '❌'"></span>
-                            <span :class="checks.descLength ? 'text-green-700' : 'text-red-600'">Meta Desc length (120-160 chars)</span>
+                             <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.descLength" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.descLength" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.descLength ? 'text-gray-700 font-medium' : 'text-gray-500'">Meta Desc (120-160 chars)</span>
                         </li>
                         <li class="flex items-start gap-2">
-                            <span x-text="checks.keywordInDesc ? '✅' : '❌'"></span>
-                            <span :class="checks.keywordInDesc ? 'text-green-700' : 'text-red-600'">Keyword in Meta Desc</span>
+                             <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.keywordInDesc" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.keywordInDesc" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.keywordInDesc ? 'text-gray-700 font-medium' : 'text-gray-500'">Keyword in Meta Desc</span>
                         </li>
                          <li class="flex items-start gap-2">
-                            <span x-text="checks.contentLength ? '✅' : '❌'"></span>
-                            <span :class="checks.contentLength ? 'text-green-700' : 'text-red-600'">Content > 300 words</span>
+                             <div class="shrink-0 mt-0.5">
+                                <svg x-show="checks.contentLength" x-cloak class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg x-show="!checks.contentLength" x-cloak class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span :class="checks.contentLength ? 'text-gray-700 font-medium' : 'text-gray-500'">Content > 300 words</span>
                         </li>
                     </ul>
                 </div>
@@ -154,7 +180,6 @@
         </div>
     </div>
 
-    {{-- Script Section --}}
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
     <script>
         function seoAnalyzer() {
@@ -165,13 +190,8 @@
                 keyword: '',
                 content: '',
                 score: 0,
-                checks: {
-                    titleLength: false,
-                    keywordInTitle: false,
-                    descLength: false,
-                    keywordInDesc: false,
-                    contentLength: false
-                },
+                checks: { titleLength: false, keywordInTitle: false, descLength: false, keywordInDesc: false, contentLength: false },
+                
                 checkSeo() {
                     if(tinymce.get('myeditor')) {
                         this.content = tinymce.get('myeditor').getContent({format: 'text'});
@@ -192,16 +212,17 @@
                     this.checks.keywordInDesc = this.keyword.length > 0 && this.description.toLowerCase().includes(this.keyword.toLowerCase());
                     if(this.checks.keywordInDesc) passed++;
 
-                    let wordCount = this.content.trim().split(/\s+/).length;
+                    let text = this.content.trim();
+                    let wordCount = text === '' ? 0 : text.split(/\s+/).length;
                     this.checks.contentLength = wordCount > 300;
                     if(this.checks.contentLength) passed++;
 
                     this.score = Math.round((passed / totalChecks) * 100);
                 },
                 get scoreColor() {
-                    if (this.score < 50) return 'text-red-600';
-                    if (this.score < 80) return 'text-yellow-500';
-                    return 'text-green-600';
+                    if (this.score < 50) return 'border-red-500 text-red-600 bg-red-50';
+                    if (this.score < 80) return 'border-yellow-500 text-yellow-600 bg-yellow-50';
+                    return 'border-green-500 text-green-600 bg-green-50';
                 }
             }
         }
@@ -213,14 +234,64 @@
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | link image',
             skin: 'oxide',
             content_css: 'default',
+            image_title: true,
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open('POST', '{{ route('tinymce.upload') }}');
+                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+                xhr.upload.onprogress = (e) => {
+                    progress(e.loaded / e.total * 100);
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 403) {
+                        reject({ message: 'HTTP Error: ' + xhr.status, remove: true });
+                        return;
+                    }
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        reject('HTTP Error: ' + xhr.status);
+                        return;
+                    }
+                    const json = JSON.parse(xhr.responseText);
+                    if (!json || typeof json.location != 'string') {
+                        reject('Invalid JSON: ' + xhr.responseText);
+                        return;
+                    }
+                    resolve(json.location);
+                };
+
+                xhr.onerror = () => {
+                    reject('Image upload failed. Code: ' + xhr.status);
+                };
+
+                const formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            }),
             setup: function(editor) {
                 editor.on('KeyUp Change', function(e) {
-                     // Ensure the Alpine component exists before trying to access it
-                     let el = document.querySelector('[x-data]');
-                     if (el && el.__x) {
-                        let alpineComponent = el.__x.$data;
-                        alpineComponent.content = editor.getContent({format: 'text'});
-                        alpineComponent.checkSeo();
+                    var content = editor.getContent({format: 'text'});
+                    var el = document.getElementById('seo-component');
+                    if (el) {
+                        el.dispatchEvent(new CustomEvent('seo-update', { 
+                            detail: content,
+                            bubbles: true 
+                        }));
+                    }
+                });
+                // Initialize content for SEO check on load
+                editor.on('init', function(e) {
+                     var content = editor.getContent({format: 'text'});
+                     var el = document.getElementById('seo-component');
+                     if (el) {
+                         el.dispatchEvent(new CustomEvent('seo-update', { 
+                             detail: content,
+                             bubbles: true 
+                         }));
                      }
                 });
             }
