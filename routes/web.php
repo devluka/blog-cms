@@ -13,9 +13,7 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/category/{slug}', [BlogController::class, 'category'])->name('blog.category');
 Route::get('/tag/{slug}', [BlogController::class, 'tag'])->name('blog.tag');
 
-// Static Pages
 Route::get('/about', function () {
-    // We need categories for the navbar
     $categories = \App\Models\Category::has('posts')->take(5)->get();
     return view('about', compact('categories'));
 })->name('about');
@@ -25,7 +23,6 @@ Route::get('/privacy', function () {
     return view('privacy', compact('categories'));
 })->name('privacy');
 
-// Contact Page
 Route::get('/contact', function () {
     $categories = \App\Models\Category::has('posts')->select('id', 'name', 'slug')->get();
     return view('contact', compact('categories'));
