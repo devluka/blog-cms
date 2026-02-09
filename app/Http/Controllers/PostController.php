@@ -107,7 +107,6 @@ class PostController extends Controller
             'meta_keyword' => $request->meta_keyword,
         ];
 
-        // Handle Image Removal
         if ($request->has('remove_image')) {
             if ($post->featured_image) {
                 Storage::disk('public')->delete($post->featured_image);
@@ -115,7 +114,6 @@ class PostController extends Controller
             $data['featured_image'] = null;
         }
 
-        // Handle New Image Upload
         if ($request->hasFile('featured_image')) {
             if ($post->featured_image) {
                 Storage::disk('public')->delete($post->featured_image);
