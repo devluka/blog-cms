@@ -13,7 +13,6 @@
         @if($featured)
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
                 
-                {{-- Hero Image / Fallback --}}
                 <div class="lg:col-span-7 group cursor-pointer relative aspect-video">
                     <a href="{{ route('blog.show', $featured->slug) }}" class="block w-full h-full overflow-hidden rounded-2xl shadow-sm relative">
                         
