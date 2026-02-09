@@ -6,7 +6,6 @@
     </x-slot>
 
     {{-- SEO Logic using Alpine.js --}}
-    {{-- CRITICAL: id="seo-component" and @seo-update are required for TinyMCE communication --}}
     <div class="py-12" 
          id="seo-component" 
          x-data="seoAnalyzer()" 
