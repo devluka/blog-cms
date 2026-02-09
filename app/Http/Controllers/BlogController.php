@@ -44,25 +44,19 @@ class BlogController extends Controller
         return view('blog.index', compact('posts', 'categories'));
     }
 
-    /**
-     * Display the specified resource.
-     */
 public function show($slug)
     {
-        // 1. Fetch current post
         $post = Post::with(['category', 'user', 'tags'])
                     ->where('slug', $slug)
                     ->where('is_published', true)
                     ->firstOrFail();
 
-        // 2. Fetch related posts (Same category, excluding current)
         $relatedPosts = Post::where('category_id', $post->category_id)
-                            ->where('id', '!=', $post->id) // Exclude current post
+                            ->where('id', '!=', $post->id) 
                             ->where('is_published', true)
                             ->take(3)
                             ->get();
 
-        // 3. Fallback: If not enough related posts, fill with latest posts
         if ($relatedPosts->count() < 3) {
             $morePosts = Post::where('id', '!=', $post->id)
                              ->where('is_published', true)
