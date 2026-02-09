@@ -27,15 +27,10 @@
 
             {{-- 1. DATA PREPARATION --}}
             @php
-                // We create a base query builder first
                 $query = Auth::user()->posts();
-                
-                // DATA FOR STATS: We calculate these separately so they count the whole DB, not just the current page
                 $totalCount = $query->count();
                 $publishedCount = $query->clone()->where('is_published', true)->count();
                 $draftCount = $query->clone()->where('is_published', false)->count();
-
-                // DATA FOR TABLE: We use paginate() instead of get()
                 $posts = $query->clone()->orderBy('created_at', 'desc')->paginate(10);
             @endphp
 
@@ -172,8 +167,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    {{-- PAGINATION LINKS ADDED HERE --}}
                     <div class="px-6 py-4 border-t border-gray-100">
                         {{ $posts->links() }}
                     </div>
