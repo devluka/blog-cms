@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
 
-    {{-- SEO Logic using Alpine.js --}}
     <div class="py-12" 
          id="seo-component" 
          x-data="seoAnalyzer()" 
@@ -35,7 +34,7 @@
                             <input type="text" name="title" x-model="title" @input="checkSeo" required
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             <p class="text-xs mt-1" :class="title.length > 60 ? 'text-red-500' : 'text-gray-500'">
-                                <span x-text="title.length"></span>/60 characters (Recommended: 50-60)
+                                <span x-text="title.length"></span>/60 characters (Recommended: 40-60)
                             </p>
                         </div>
 
@@ -63,7 +62,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700">Featured Image</label>
+                            <label class="block text-sm font-medium text-gray-700">Featured Image(2MB)</label>
                             <input type="file" name="featured_image" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                         </div>
 
